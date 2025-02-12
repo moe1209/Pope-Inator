@@ -1,27 +1,10 @@
 import os
-import time
 import logging
 import requests
 import asyncio
-from web3 import Web3
-WEB3_PROVIDER = os.environ.get("WEB3_PROVIDER")
-if not WEB3_PROVIDER:
-    raise Exception("WEB3_PROVIDER environment variable not set")
-
-w3 = Web3(Web3.HTTPProvider(WEB3_PROVIDER))
-if not w3.is_connected():
-    raise Exception("Failed to connect to blockchain")
+from telegram import Bot
 from telegram.ext import Updater, CommandHandler
-import os
-
-# Access environment variables
-TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
-WALLET_ADDRESS = os.environ.get("YOUR_WALLET")
-PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
-WEB3_PROVIDER = os.environ.get("WEB3_PROVIDER")
-
-if not all([TOKEN, WALLET_ADDRESS, PRIVATE_KEY, WEB3_PROVIDER]):
-    raise Exception("Missing required environment variables")
+from web3 import Web3
 
 # Logging setup
 logging.basicConfig(
@@ -30,15 +13,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Environment Variables
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-WALLET_ADDRESS = os.getenv("YOUR_WALLET")
-PRIVATE_KEY = os.getenv("PRIVATE_KEY")
-WEB3_PROVIDER = os.getenv("WEB3_PROVIDER")
+# Access environment variables
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+WALLET_ADDRESS = os.environ.get("YOUR_WALLET")
+PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
+WEB3_PROVIDER = os.environ.get("WEB3_PROVIDER")
 
 # Validate environment variables
 if not all([TOKEN, WALLET_ADDRESS, PRIVATE_KEY, WEB3_PROVIDER]):
     raise Exception("Missing required environment variables")
+
+# Web3 Setup
+w3 = Web3(Web3.HTTPProvider(WEB3_PROVIDER))
+if not w3.is_connected():
+    raise Exception("Failed to connect to blockchain")
 
 # Initialize Telegram bot
 updater = Updater(token=TOKEN, use_context=True)
@@ -180,12 +168,15 @@ dispatcher.add_handler(CommandHandler("trade", buy_meme_coin))
 dispatcher.add_handler(CommandHandler("whales", list_whales))
 dispatcher.add_handler(CommandHandler("notify", toggle_notifications))
 
-# Start the bot
+# Start whale monitoring in a separate thread
+whale_thread = threading.Thread(target=detect_whales)
+whale_thread.daemon = True
+whale_thread.start()
+
+# Start bot
 def start_bot():
     updater.start_polling()
     updater.idle()
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.create_task(detect_whales())
     start_bot()
