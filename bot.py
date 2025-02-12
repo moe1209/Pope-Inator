@@ -4,6 +4,13 @@ import logging
 import requests
 import asyncio
 from web3 import Web3
+WEB3_PROVIDER = os.environ.get("WEB3_PROVIDER")
+if not WEB3_PROVIDER:
+    raise Exception("WEB3_PROVIDER environment variable not set")
+
+w3 = Web3(Web3.HTTPProvider(WEB3_PROVIDER))
+if not w3.is_connected():
+    raise Exception("Failed to connect to blockchain")
 from telegram.ext import Updater, CommandHandler
 import os
 
@@ -32,11 +39,6 @@ WEB3_PROVIDER = os.getenv("WEB3_PROVIDER")
 # Validate environment variables
 if not all([TOKEN, WALLET_ADDRESS, PRIVATE_KEY, WEB3_PROVIDER]):
     raise Exception("Missing required environment variables")
-
-# Web3 Setup
-w3 = Web3(Web3.HTTPProvider(WEB3_PROVIDER))
-if not w3.is_connected():
-    raise Exception("Failed to connect to blockchain")
 
 # Initialize Telegram bot
 updater = Updater(token=TOKEN, use_context=True)
