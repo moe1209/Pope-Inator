@@ -5,14 +5,6 @@ import requests
 import asyncio
 from web3 import Web3
 from telegram.ext import Updater, CommandHandler
-from telegram.ext import CommandHandler
-
-def start(update, context):
-    update.message.reply_text("🚀 Bot started! Use /help to see available commands.")
-
-dispatcher.add_handler(CommandHandler("start", start))
-from dotenv import load_dotenv
-from functools import wraps
 
 # Load environment variables
 load_dotenv()
