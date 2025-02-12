@@ -5,9 +5,16 @@ import requests
 import asyncio
 from web3 import Web3
 from telegram.ext import Updater, CommandHandler
+import os
 
-# Load environment variables
-load_dotenv()
+# Access environment variables
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+WALLET_ADDRESS = os.environ.get("YOUR_WALLET")
+PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
+WEB3_PROVIDER = os.environ.get("WEB3_PROVIDER")
+
+if not all([TOKEN, WALLET_ADDRESS, PRIVATE_KEY, WEB3_PROVIDER]):
+    raise Exception("Missing required environment variables")
 
 # Logging setup
 logging.basicConfig(
