@@ -36,7 +36,7 @@ if not all([TOKEN, WALLET_ADDRESS, PRIVATE_KEY, WEB3_PROVIDER]):
 
 # Web3 Setup
 w3 = Web3(Web3.HTTPProvider(WEB3_PROVIDER))
-if not w3.isConnected():
+if not w3.is_connected():
     raise Exception("Failed to connect to blockchain")
 
 # Initialize Telegram bot
