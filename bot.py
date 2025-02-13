@@ -176,6 +176,7 @@ class AdvancedTrader:
 
 # -------------------- Main Execution --------------------
 if __name__ == "__main__":
+<<<<<<< HEAD
     trader = AdvancedTrader()
     
     # Start strategy threads
@@ -193,3 +194,6 @@ if __name__ == "__main__":
     # Start Telegram bot
     updater.start_polling()
     updater.idle()
+=======
+    start_bot()
+>>>>>>> 94e3da086bc773fec8b536575cada1b762eaa059
